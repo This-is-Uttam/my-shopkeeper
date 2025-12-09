@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-    return NextResponse.json({status: true, response: "Successfull response!"})
+    return NextResponse.json({message: "Api working successfully..."})
 }

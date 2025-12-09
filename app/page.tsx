@@ -5,9 +5,20 @@ import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useRouter } from "next/router";
+import { useUser,  } from "@clerk/nextjs";
 
 export default function Home() {
   const notify = (e: string) => toast(e);
+  const userData = useUser()
+  console.log(`Is User Signed In: ${userData.isSignedIn}`)
+  console.log(`Is User loaded: ${userData.isLoaded}`)
+  console.log(`User Data : ${userData.user?.fullName}`)
+  // console.log(`User Data : ${userData.user?.username}`)
+  console.log(`User Data : ${userData.user?.emailAddresses[0]}`)
+  console.log(`User Data : ${userData.user?.imageUrl}`)
+  console.log(`User Data : ${userData.user?.lastSignInAt}`)
+  console.log(`User Data : ${userData.user?.id}`)
+  console.log(`User Data : ${userData.user?.phoneNumbers}`)
   return (
     <>
       <Image
@@ -78,7 +89,7 @@ export default function Home() {
         />
       </div>
 
-      <LoadingSkeleton/>
+      {/* <LoadingSkeleton/> */}
     </>
   );
 }

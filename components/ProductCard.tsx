@@ -1,9 +1,44 @@
-import React from 'react'
+"use client";
 
-const ProductCard = () => {
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+type ProductCardProps = {
+  title: string;
+  price: number;
+  img: string;
+};
+
+const ProductCard = ({ title, price, img }: ProductCardProps) => {
+  const router = useRouter();
+
+  const handleClick = (title: string, price: number, img: string) => {
+    router.push(`products/${title.split(" ")[0]}`);
+  };
+
   return (
-    <div>ProductCard</div>
-  )
-}
+    <div
+      onClick={() => {
+        handleClick(title, price, img);
+      }}
+      className="w-[190px] p-2 px-4 cursor-pointer hover:border rounded-2xl"
+    >
+      <div className="h-55 overflow-hidden flex items-center">
+        <Image
+          width={1980}
+          height={1080}
+          src={img}
+          alt=""
+          unoptimized
+          className="w-50 "
+        />
+      </div>
+      <div className="title font-semibold overflow-hidden line-clamp-2">
+        {title}
+      </div>
+      <div className="price font-bold text-center text-[18px]">₹{price}</div>
+    </div>
+  );
+};
 
-export default ProductCard
+export default ProductCard;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Boxes, BubblesIcon, Home, MessageCircle, MessageCircleCode, Phone, ShoppingCart } from "lucide-react";
+import { Boxes, ShoppingCart } from "lucide-react";
 import {
   SignInButton,
   SignedIn,
@@ -49,26 +49,26 @@ const Navbar: React.FC = () => {
         {/* Desktop Menu */}
         <ul className="hidden md:flex gap-3 font-medium text-gray-700">
           <li>
-            <Link href="/" className="hover:text-blue-600  font-bold flex gap-1 items-center border px-2 py-1 border-white hover:border-gray-300 rounded-[8px]">
+            <Link href="/" className="hover:text-blue-600  font-bold flex gap-1 items-center  px-2 py-1 border-white  rounded-[8px]">
               <FaHome className="w-[16px] text-blue-600 "/>
               <span>Home</span>
             </Link>
           </li>
           <li>
-            <Link href="/products" className="hover:text-blue-600  font-bold  flex gap-1 items-center border px-2 py-1 border-white hover:border-gray-300 rounded-[8px]">
+            <Link href="/products" className="hover:text-blue-600  font-bold  flex gap-1 items-center  px-2 py-1 border-white  rounded-[8px]">
             <Boxes className="w-[16px] text-blue-600 "/>
               Products
             </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-blue-600  font-bold  flex gap-1 items-center border px-2 py-1 border-white hover:border-gray-300 rounded-[8px]">
+            <Link href="/about" className="hover:text-blue-600  font-bold  flex gap-1 items-center  px-2 py-1 border-white  rounded-[8px]">
             <FcAbout className="w-[16px] text-blue-600 "/>
               About
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="hover:text-blue-600  font-bold  flex gap-1 items-center border px-2 py-1 border-white hover:border-gray-300 rounded-[8px]">
-            <FaPhone className="w-[16px] text-blue-600 rotate-90"/>
+            <Link href="/contact" className="hover:text-blue-600  font-bold  flex gap-1 items-center  px-2 py-1 border-white  rounded-[8px]">
+            <FaPhone className="w-[12px] text-blue-600 rotate-90"/>
               Contact
             </Link>
           </li>

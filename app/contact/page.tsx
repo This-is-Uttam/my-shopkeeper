@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/Button";
 import { useState } from "react";
 
 export default function ContactPage() {
@@ -13,8 +14,11 @@ export default function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  
+  
+
+  const handleSubmit = () => {
+    // e.preventDefault();
     alert("Form submitted! We will reach out soon.");
   };
 
@@ -59,7 +63,7 @@ export default function ContactPage() {
 
         {/* Contact Form */}
         <form
-          onSubmit={handleSubmit}
+          // onSubmit={handleSubmit}
           className="bg-white p-8 rounded-xl shadow-lg space-y-6 border"
         >
           <h2 className="text-2xl font-semibold text-gray-800">Send Message</h2>
@@ -94,12 +98,10 @@ export default function ContactPage() {
             className="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
           ></textarea>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-md font-medium"
-          >
-            Submit Message
-          </button>
+          
+          <Button onClick={handleSubmit}>
+            Submit
+          </Button>
         </form>
 
       </div>

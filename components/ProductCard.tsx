@@ -21,7 +21,7 @@ const ProductCard = ({ title, price, img }: ProductCardProps) => {
       onClick={() => {
         handleClick(title, price, img);
       }}
-      className="w-[190px] p-2 px-4 cursor-pointer hover:border rounded-2xl"
+      className="w-[190px] p-2 px-4 cursor-pointer rounded-2xl hover:scale-[1.02] hover:shadow-lg transition"
     >
       <div className="h-55 overflow-hidden flex items-center">
         <Image
@@ -30,10 +30,10 @@ const ProductCard = ({ title, price, img }: ProductCardProps) => {
           src={img}
           alt=""
           unoptimized
-          className="w-50 "
+          className="w-50 rounded-2xl"
         />
       </div>
-      <div className="title font-semibold overflow-hidden line-clamp-2">
+      <div className="title font-semibold overflow-hidden line-clamp-2 text-center">
         {title}
       </div>
       <div className="price font-bold text-center text-[18px]">₹{price}</div>

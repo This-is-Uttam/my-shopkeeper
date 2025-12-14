@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
 
-const Button = () => {
+type ButtonProp = {
+  children: React.ReactNode;
+  onClick: () => void;
+};
+
+const Button = ({ children, onClick }: ButtonProp) => {
   return (
-    <div>Button</div>
-  )
-}
+    <div
+      className="w-full text-center cursor-pointer bg-blue-600 hover:bg-blue-700 transition text-white py-3 my-4 rounded-md font-medium"
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  );
+};
 
-export default Button
+export default Button;

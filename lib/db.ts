@@ -18,6 +18,7 @@ export async function connectDB() {
   }
 
   if (!cached.promise) {
+    // start connecting...
     cached.promise = mongoose
       .connect(MONGODB_URI, { bufferCommands: false })
       .then((mongoose) => {
@@ -26,5 +27,6 @@ export async function connectDB() {
   }
 
   cached.conn = await cached.promise;
+  // connnection successfully completed
   return cached.conn;
 }

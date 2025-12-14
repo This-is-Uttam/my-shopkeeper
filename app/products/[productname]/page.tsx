@@ -6,6 +6,8 @@ export default async function Page({
   params: { productname: string };
 }) {
   const n = (await params).productname;
+
+  
   return (
     <div>
       <div className="flex my-8">

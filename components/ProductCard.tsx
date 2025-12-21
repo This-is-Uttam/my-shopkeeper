@@ -7,13 +7,14 @@ type ProductCardProps = {
   title: string;
   price: number;
   img: string;
+  slug: string
 };
 
-const ProductCard = ({ title, price, img }: ProductCardProps) => {
+const ProductCard = ({ title, price, img, slug }: ProductCardProps) => {
   const router = useRouter();
 
   const handleClick = (title: string, price: number, img: string) => {
-    router.push(`products/${title.split(" ")[0]}`);
+    router.push(`products/${slug}`);
   };
 
   return (

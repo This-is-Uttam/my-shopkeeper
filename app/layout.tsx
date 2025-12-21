@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import ReduxProvider from "./provider";
 
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
         <head>
           <script src="https://cdn.lordicon.com/lordicon.js"></script>
         </head>
+        <ReduxProvider>
         <body
           className={` antialiased bg-white`}
         >
@@ -29,6 +31,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </body>
+        </ReduxProvider>
       </html>
     </ClerkProvider>
   );

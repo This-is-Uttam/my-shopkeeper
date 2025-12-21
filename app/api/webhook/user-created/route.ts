@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/db";
 import { User } from "@/lib/models/User";
 
 export async function POST(req: Request) {
+  console.log("webhook post working...")
   try {
     const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
     if (!WEBHOOK_SECRET) throw new Error("Webhook secret missing from ENV");
@@ -41,14 +42,14 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(`Succeed: evg.data: ${evt.data.data}`);
-    console.log(`Succeed: evg.data first: ${evt.data.first_name}`);
+    // console.log(`Succeed: evg.data first: ${evt.data.first_name}`);
     await connectDB();
-
+    
     const { id, email_addresses, first_name, last_name, profile_image_url, phone_numbers } =
-      evt.data;
+    evt.data;
     const email = email_addresses?.[0]?.email_address;
     const fullName = `${first_name ?? ""} ${last_name ?? ""}`.trim();
+    const phone_number = phone_numbers[0].phone_number;
 
 
     const existing = await User.findOne({ clerkId: id });
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
         clerkId: id,
         email,
         imageUrl: profile_image_url,
-        phone: phone_numbers[0],
+        phone: phone_number,
       });
     }
 

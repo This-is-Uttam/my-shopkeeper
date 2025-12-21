@@ -1,25 +1,79 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
+import { IProduct } from "./Products";
 
-const Schema = mongoose.Schema;
+/* =======================
+   Cart Interfaces
+======================= */
 
-interface IUser {
-  fullName: string;
-  clerkId: String;
-  email: String;
-  imageUrl: String;
-  phone: String;
-  isSignedIn: Boolean;
+// DB cart item (stored in MongoDB)
+export interface ICartItem {
+  productId: Types.ObjectId;
+  quantity: number;
+  priceAtThatTime: number;
 }
+
+// Populated cart item (after populate)
+export interface IPopulatedCartItem {
+  productId: IProduct;
+  quantity: number;
+  priceAtThatTime: number;
+};
+
+/* =======================
+   User Interfaces
+======================= */
+
+export interface IUser extends Document {
+  fullName: string;
+  clerkId: string;
+  email: string;
+  imageUrl?: string;
+  phone?: string;
+  isSignedIn?: boolean;
+  cart: ICartItem[];
+}
+
+// Optional helper type (NOT a schema)
+export interface IUserWithPopulatedCart extends Omit<IUser, "cart"> {
+  cart: IPopulatedCartItem[];
+}
+
+/* =======================
+   User Schema
+======================= */
 
 const userSchema = new Schema<IUser>(
   {
-    fullName: String,
-    clerkId: String,
-    email: String,
-    imageUrl: String,
-    phone: String,
+    fullName: { type: String },
+    clerkId: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
+    imageUrl: { type: String },
+    phone: { type: String },
+
+    cart: [
+      {
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        priceAtThatTime: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
 
-export const User = mongoose.models.User || mongoose.model("User", userSchema);
+/* =======================
+   Model Export
+======================= */
+
+export const User =
+  mongoose.models.User || mongoose.model<IUser>("User", userSchema);

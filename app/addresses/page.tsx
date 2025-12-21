@@ -23,7 +23,6 @@ export default function AddressPage() {
     const resJson = await response.json();
     setaddresses(resJson.data || []);
     setaddArr(resJson.data || []);
-    console.log(resJson.data);
   };
 
   useEffect(() => {
@@ -72,7 +71,6 @@ export default function AddressPage() {
                   });
 
                   const resData = await response.json();
-                  console.log(JSON.stringify(resData));
 
                   if (resData.status == 200) {
                     // Deleted successfully

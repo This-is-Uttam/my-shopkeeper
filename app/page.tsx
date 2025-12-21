@@ -24,15 +24,14 @@ export default function Home() {
     setProducts(resJson.products || [])
     setisLoading(false)
 
-    console.log(JSON.stringify(resJson));
   };
 
   useEffect(() => {
     getAllProducts();
   }, []);
 
-  if(isLoading){
-    return (<LoadingSkeleton/>)
+  if (isLoading) {
+    return (<LoadingSkeleton />)
   }
 
   return (
@@ -49,16 +48,18 @@ export default function Home() {
 
       <div className="grid grid-cols-6 gap-5 p-2 py-4">
 
-      {products.map((item, i) => (
-        <ProductCard
-          title={item.name}
-          price={item.price}
-          img={item.thumbnail}
-        />
-      ))}
+        {products.map((item, i) => ( 
+          <ProductCard
+            key={i}
+            title={item.name}
+            price={item.price}
+            img={item.thumbnail}
+            slug={item.slug}
+          />
+        ))}
       </div>
 
-      
+
     </>
   );
 }

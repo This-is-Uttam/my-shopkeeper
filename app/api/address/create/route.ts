@@ -36,7 +36,9 @@ export async function POST(request: Request) {
 
         let defaultAddress = false;
 
-        if (existingAddresses.length == 0) defaultAddress = true;
+        console.log("Existing Addresses: ", existingAddresses.length);
+        if (existingAddresses.length == 0) 
+          defaultAddress = true;
 
         //   Create new address in db
 
@@ -50,7 +52,7 @@ export async function POST(request: Request) {
             city,
             state,
             pincode,
-            defaultAddress,
+            isDefault: defaultAddress,
         });
 
         return NextResponse.json(

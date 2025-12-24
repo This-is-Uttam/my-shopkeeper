@@ -65,17 +65,17 @@ export default function AddressForm({ onSubmit, editData }: AddressFormProps) {
           <input
             type="text"
             placeholder="House / Flat / Building (optional)"
-            value={data.addressLine1}
-            onChange={(e) => handleChange("addressLine1", e.target.value)}
+            value={data.addressLine2}
+            onChange={(e) => handleChange("addressLine2", e.target.value)}
             className="border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <input
             type="text"
             placeholder="Area / Colony / Locality"
-            value={data.addressLine2}
+            value={data.addressLine1}
             required
-            onChange={(e) => handleChange("addressLine2", e.target.value)}
+            onChange={(e) => handleChange("addressLine1", e.target.value)}
             className="border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 

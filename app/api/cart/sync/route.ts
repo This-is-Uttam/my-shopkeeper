@@ -15,14 +15,12 @@ export interface ISyncCartItem {
 }
 
 export async function POST(req: Request) {
-  console.log("cart data is saving0");
   try {
     //  Auth check
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.log("cart data is saving1");
     //  Read request body
     const { items }: { items: ISyncCartItem[] } = await req.json();
 
@@ -32,7 +30,6 @@ export async function POST(req: Request) {
 
     //  Connect DB
     await connectDB();
-    console.log("cart data is saving2", items.length);
 
     let dbCart: any;
     //  Normalize cart for DB
@@ -53,7 +50,6 @@ export async function POST(req: Request) {
       { new: true, upsert: true }
     );
 
-    console.log("cart data is saving3");
 
     return NextResponse.json({ success: true });
   } catch (error) {

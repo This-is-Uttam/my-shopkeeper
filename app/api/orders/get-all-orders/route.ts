@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Order } from "@/lib/models/Orders";
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   try {
     // check if user is logged in
     const { userId } = await auth();
@@ -12,22 +12,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // get the request
-    const data = await request.json();
-
-    // console.log("Orderid:", data);
-
     // connect to db
     await connectDB();
     // Create new order in db
-    const orderData = await Order.findOne({
-      _id: data.orderId,
-      userId: userId,
+    const orders = await Order.find({
+      userId,
     });
 
-    console.log("Order Data Received:", orderData);
+    console.log("All Orders Received:", orders);
 
-    return NextResponse.json({ status: 201, data: orderData }, { status: 201 });
+    return NextResponse.json({ status: 201, data: orders }, { status: 201 });
   } catch (error) {
     console.error("Orders POST Error:", error);
     return NextResponse.json(

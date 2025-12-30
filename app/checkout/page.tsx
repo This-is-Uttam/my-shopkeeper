@@ -23,10 +23,12 @@ export default function CheckoutPage() {
     isDefault: false,
   });
 
+  const [disableBtn, setDisableBtn] = useState(false)
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [ordersItems, setOrdersItems] = useState<IOrderItem[]>([])
+  const [ordersItems, setOrdersItems] = useState<IOrderItem[]>([]);
   const deliveryCharge = 40;
 
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<Number>();
@@ -77,14 +79,18 @@ export default function CheckoutPage() {
       quantity: item.quantity,
       priceAtThatTime: item.discountPrice,
     }));
-    setOrdersItems(ordersItems)
-
+    setOrdersItems(ordersItems);
   };
 
+  const addAddress = () => {
+    router.push("/addresses/add");
+  }
 
   // place order logic
   const handlePlaceOrder = async () => {
-    console.log("Placing Order...address: ",address);
+    // disable the place order button
+    setDisableBtn(true)
+    // call the api to place order
     const response = await fetch("/api/orders/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -98,6 +104,9 @@ export default function CheckoutPage() {
     });
 
     const resJson = await response.json();
+    // enable the place order button
+    setDisableBtn(false)
+
     if (resJson.status == 201) {
       // order placed successfully
 
@@ -113,20 +122,17 @@ export default function CheckoutPage() {
       // redirect to order confirmation / order details page
       router.push(`/order-success?orderId=${resJson.orderId}`);
     }
-    
   };
-
 
   const totalItems = ordersItems.reduce((acc, curr) => {
     return acc + curr.quantity;
   }, 0);
 
-   const totalPrice = ordersItems.reduce((acc, curr) => {
+  const totalPrice = ordersItems.reduce((acc, curr) => {
     return acc + curr.priceAtThatTime * curr.quantity;
   }, 0);
 
-   const payableAmount = totalPrice + deliveryCharge;
-
+  const payableAmount = totalPrice + deliveryCharge;
 
   useEffect(() => {
     getDefaultAddress();
@@ -176,21 +182,23 @@ export default function CheckoutPage() {
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="font-bold mb-3">Delivery Address</h2>
-                  <p className="text-sm text-gray-700">
-                    <strong>{address.fullName}</strong>
-                    <br />
-                    {address.addressLine1} {address.addressLine2}
-                    <br />
-                    {address.city}, {address.state} – {address.pincode}
-                    <br />
-                    Phone: {address.phone}
-                  </p>
+                  {address && (
+                    <p className="text-sm text-gray-700">
+                      <strong>{address?.fullName}</strong>
+                      <br />
+                      {address?.addressLine1} {address?.addressLine2}
+                      <br />
+                      {address?.city}, {address?.state} – {address?.pincode}
+                      <br />
+                      Phone: {address?.phone}
+                    </p>
+                  )}
                 </div>
                 <button
-                  onClick={changeAddress}
-                  className="text-blue-600 text-sm font-medium"
+                  onClick={address ? changeAddress : addAddress}
+                  className="text-blue-600 cursor-pointer text-sm font-medium"
                 >
-                  Change
+                  {address ? "Change" : "Add Address"}
                 </button>
               </div>
             )}
@@ -220,52 +228,50 @@ export default function CheckoutPage() {
           </div>
 
           {/* productDetails */}
-                  <div className=" flex flex-col gap-3  border rounded-lg p-5">
-                    <h2 className="font-bold mb-4">Products</h2>
+          <div className=" flex flex-col gap-3  border rounded-lg p-5">
+            <h2 className="font-bold mb-4">Products</h2>
 
-                    {ordersItems.map((item, index) => (
-                      <div className=" border rounded-2xl px-4 py-3 productDetails p-2 flex  gap-5">
-                        {/* Product Image and quantity */}
-                        <div className="productImage">
-                          <Image
-                            // onClick={() => { setImgIndex(index) }}
-                            width={1980}
-                            height={1080}
-                            src={item.image}
-                            alt=""
-                            unoptimized
-                            className="w-28 m-auto rounded-[8px] mb-2"
-                          />
-          
-                        </div>
-          
-                        <div className="w-full">
-                          {/* Product Name and Remove icon*/}
-                          <div className=" font-semibold flex justify-between">
-                            {item.name}
-                            
-                            <div className="font-bold text-gray-800 ">
-                              ₹{item.priceAtThatTime}
-                              
-                            </div>
-                          </div>
-                          {/* Delivery */}
-                          <div className="text-gray-600 text-sm">
-                            Delivered in <strong className="text-black">4 - 6 days</strong> ,
-                            Thu 4 Dec
-                          </div>
-                          {/* Product Price */}
-                          <div>
-                            
-                          {/* Quantity */}
-                          <div className="flex gap-2 h-auto">
-                            Qty: <b>{item.quantity}</b>
-                          </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+            {ordersItems.map((item, index) => (
+              <div className=" border rounded-2xl px-4 py-3 productDetails p-2 flex  gap-5">
+                {/* Product Image and quantity */}
+                <div className="productImage">
+                  <Image
+                    // onClick={() => { setImgIndex(index) }}
+                    width={1980}
+                    height={1080}
+                    src={item.image}
+                    alt=""
+                    unoptimized
+                    className="w-28 m-auto rounded-[8px] mb-2"
+                  />
+                </div>
+
+                <div className="w-full">
+                  {/* Product Name and Remove icon*/}
+                  <div className=" font-semibold flex justify-between">
+                    {item.name}
+
+                    <div className="font-bold text-gray-800 ">
+                      ₹{item.priceAtThatTime}
+                    </div>
                   </div>
+                  {/* Delivery */}
+                  <div className="text-gray-600 text-sm">
+                    Delivered in{" "}
+                    <strong className="text-black">4 - 6 days</strong> , Thu 4
+                    Dec
+                  </div>
+                  {/* Product Price */}
+                  <div>
+                    {/* Quantity */}
+                    <div className="flex gap-2 h-auto">
+                      Qty: <b>{item.quantity}</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* RIGHT SECTION */}
@@ -279,9 +285,9 @@ export default function CheckoutPage() {
             </div>
 
             <div className="flex justify-between">
-                <div>TDS</div>
-                <div>₹0</div>
-              </div>
+              <div>TDS</div>
+              <div>₹0</div>
+            </div>
 
             <div className="flex justify-between">
               <span>Delivery Charges</span>
@@ -297,9 +303,9 @@ export default function CheckoutPage() {
           </div>
 
           {/* Place Order */}
-          <button
+          <button disabled={disableBtn || ordersItems.length === 0 || !address}
             onClick={handlePlaceOrder}
-            className="w-full mt-6 cursor-pointer bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition"
+            className="w-full mt-6 cursor-pointer bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 "
           >
             Place Order
           </button>

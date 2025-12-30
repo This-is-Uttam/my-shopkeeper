@@ -16,10 +16,13 @@ const Navbar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const items = useAppSelector((state) => state.cart.items);
+  let totalCartItems: number = 0;
 
-  const totalCartItems = items.reduce((acc, curr) => {
-    return acc + curr.quantity;
-  }, 0);
+  if (items) {
+    totalCartItems = items.reduce((acc, curr) => {
+      return acc + curr.quantity;
+    }, 0);
+  }
 
   return (
     <nav className="shadow-md sticky top-0 left-0 w-full backdrop-blur-sm z-50">
@@ -81,7 +84,6 @@ const Navbar: React.FC = () => {
         </ul>
 
         <div className="flex gap-4 items-center">
-
           {/* Cart Button */}
           <div
             onClick={() => {
@@ -93,25 +95,16 @@ const Navbar: React.FC = () => {
               <ShoppingCart />
               Cart
             </div>
-            {
-              totalCartItems != 0 && <div className="absolute -top-2 -right-2.5 bg-orange-400 rounded-2xl w-6 text-black text-center">{totalCartItems}</div>
-            }
+            {totalCartItems != 0 && (
+              <div className="absolute -top-2 -right-2.5 bg-orange-400 rounded-2xl w-6 text-black text-center">
+                {totalCartItems}
+              </div>
+            )}
           </div>
 
           {/* Login */}
-
-          {/* <div className="flex items-center ">
-            <div
-              onClick={() => signup()}
-              className="text font-semibold border-2 outline-1 outline-white  rounded-4xl px-4 py-2 text-white bg-blue-700 cursor-pointer hover:bg-blue-500 flex items-center gap-2"
-            >
-              <LogInIcon />
-              Login
-            </div>
-          </div> */}
-
           <SignedIn>
-            <div className="h-fit ring-4 ring-blue-200  w-fit flex items-center justify-center rounded-[50px] ">
+            <div className="relative hidden h-fit ring-4 ring-blue-200 w-fit md:flex items-center justify-center rounded-[50px] ">
               <UserButton>
                 <UserButton.MenuItems>
                   <UserButton.Action
@@ -136,20 +129,6 @@ const Navbar: React.FC = () => {
               <SignInButton />
             </div>
           </SignedOut>
-
-          {/* profile */}
-          {/* <ProfileCard/> */}
-
-          {/* <div className="h-9 overflow-hidden flex items-center rounded-4xl outline-3 outline-blue-500 cursor-pointer">
-            <Image
-              width={1980}
-              height={1080}
-              src="/person.jpg"
-              alt=""
-              unoptimized
-              className="w-9  rounded-4xl ring-4"
-            />
-          </div> */}
         </div>
 
         {/* Mobile Menu Button */}
@@ -165,6 +144,44 @@ const Navbar: React.FC = () => {
       {open && (
         <div className="md:hidden bg-white shadow-md border-t">
           <ul className="flex flex-col gap-4 px-6 py-5 font-medium text-gray-700">
+            <div className="flex justify-between">
+              <Link
+                href="/cart"
+                onClick={() => setOpen(false)}
+                className="px-6 py-1 w-fit rounded-md bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Cart
+              </Link>
+
+              {/* Login */}
+              <SignedIn>
+                <div className="relative  h-fit  ring-blue-200 w-fit md:flex items-center justify-center rounded-[50px] ">
+                  <UserButton>
+                    <UserButton.MenuItems>
+                      <UserButton.Action
+                        label="Wishlist"
+                        labelIcon={<BsHeart />}
+                        onClick={() => router.push("/wishlist")}
+                      />
+                    </UserButton.MenuItems>
+                    <UserButton.MenuItems>
+                      <UserButton.Action
+                        label="More"
+                        labelIcon={<CgMore />}
+                        onClick={() => router.push("/more")}
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
+                </div>
+                {/* <SignOutButton /> */}
+              </SignedIn>
+              <SignedOut>
+                <div className="text font-semibold border-2 outline-1 outline-white  rounded-4xl px-6 py-2 text-white bg-blue-700 cursor-pointer hover:bg-blue-500 transition">
+                  <SignInButton />
+                </div>
+              </SignedOut>
+            </div>
+
             <li>
               <Link href="/" onClick={() => setOpen(false)}>
                 Home
@@ -185,14 +202,6 @@ const Navbar: React.FC = () => {
                 Contact
               </Link>
             </li>
-
-            <Link
-              href="/cart"
-              onClick={() => setOpen(false)}
-              className="px-4 py-0 w-fit rounded-md bg-blue-600 text-white hover:bg-blue-700"
-            >
-              Cart
-            </Link>
           </ul>
         </div>
       )}

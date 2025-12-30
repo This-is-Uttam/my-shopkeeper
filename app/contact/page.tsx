@@ -62,7 +62,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <form
+        {/* <form
           // onSubmit={handleSubmit}
           className="bg-white p-8 rounded-xl shadow-lg space-y-6 border"
         >
@@ -102,7 +102,7 @@ export default function ContactPage() {
           <Button onClick={handleSubmit}>
             Submit
           </Button>
-        </form>
+        </form> */}
 
       </div>
 

@@ -36,8 +36,7 @@ const profile = () => {
         <Card link={"/orders"} title={"Orders"} desc={"You can check all your orders till now."}/>
         <Card link={"/wishlist"} title={"Wishlist"} desc={"Here is the list of all your wished products."}/>
         <Card link={"/addresses"} title={"Addresses"} desc={"All your saved addresses are here."}/>
-        <Card link={"/logout"} title={"Logout"} desc={"Sign Out from your account."}/>
-        <Card link={"/delete-accout"} title={"Delete Accout"} desc={"Delete your account completly from our server."}/>
+        <Card link={"/delete-accout"} title={"Delete Account"} desc={"Delete your account completly from our server."}/>
       </div>
     </div>
      </div>

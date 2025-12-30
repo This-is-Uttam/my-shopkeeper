@@ -24,7 +24,7 @@ export interface IOrder extends Document {
   totalAmount: number;
   paymentMethod: "COD" | "ONLINE";
   orderStatus: "PLACED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-  createdAt: Date;
+  orderedAt: Date;
 }
 
 const OrderSchema = new Schema<IOrder>(
@@ -63,6 +63,7 @@ const OrderSchema = new Schema<IOrder>(
       enum: ["PLACED", "SHIPPED", "DELIVERED", "CANCELLED"],
       default: "PLACED",
     },
+    orderedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

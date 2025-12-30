@@ -37,83 +37,51 @@ const Cart = () => {
 
   const payableAmount = totalDiscountedPrice + deliveryCharges;
 
-  const getCart = async () => {
-    const response = await fetch("/api/cart/sync", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const resData = await response.json();
-    const { cart } = resData;
-    console.log("resData cart updated: ", JSON.stringify(resData));
-    const cartItems: CartItem[] = cart;
-
-    dispatch(setCart(cartItems));
-  };
-
-  useEffect(() => {
-    getCart();
-  }, []);
-
-  useEffect(() => {
-    if (cartItems.length === 0) return;
-    saveCartToDb(cartItems);
-  }, [cartItems]);
-
-  // await saveCartToDb(cartItems);
+  // getting cart details
+     const getCart = async () => {
+     const response = await fetch("/api/cart/sync", {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+       },
+     });
+ 
+     const resData = await response.json();
+     const { cart } = resData;
+     console.log("resData cart updated: ", JSON.stringify(resData));
+     const cartItems: CartItem[] = cart;
+ 
+     dispatch(setCart(cartItems));
+   };
+ 
+   useEffect(() => {
+     getCart();
+   }, []);
+ 
+   useEffect(() => {
+     if (cartItems.length === 0) return;
+     saveCartToDb(cartItems);
+   }, [cartItems]);
+ 
 
   return (
     <div className="w-fit m-auto mb-4 p-4">
       {/* Header */}
-      <div className="w-[85vw] mx-4 my-1 mb-8 px-3 flex justify-between  items-baseline">
-        <h2 className="text-3xl font-bold text-gray-900">My cart</h2>
+      <div className="w-[85vw] md:px-12 md:my-1 md:mb-8 mb-3 flex justify-between  items-baseline">
+        <h2 className="text-[24px] font-bold text-gray-900">My Cart</h2>
 
-        {/* Shipping Addresss */}
-        <div className=" w-90 border rounded-2xl px-4 py-2 address">
-          <div className="flex justify-between items-center">
-            <div className=" flex items-center gap-2">
-              <Image
-                // onClick={() => { setImgIndex(index) }}
-                width={1980}
-                height={1080}
-                src={"/location.png"}
-                alt=""
-                unoptimized
-                className="w-6 rounded-[8px] py-2 object-cover"
-              />
-              <p className=" ms-1 line-clamp-1">
-                Barmasia, Duhatand, Near Aam Talab DHANBAD, Jharkhand - 826001
-              </p>
-            </div>
-
-            {/* Edit Address */}
-            <div className="border-2 border-blue-500 rounded-[8px] hover:bg-blue-100 cursor-pointer px-2">
-              <Image
-                // onClick={() => { setImgIndex(index) }}
-                width={1980}
-                height={1080}
-                src={"/pencil.png"}
-                alt=""
-                unoptimized
-                className="w-6 rounded-[8px] py-2 object-cover"
-              />
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       {/* main */}
-      <div className=" flex justify-center">
+      <div className=" flex justify-center lg:flex-row flex-col gap-8">
         {/* productDetails */}
-        <div className=" flex flex-col gap-3 ">
+        <div className=" flex flex-col gap-3">
           {cartItems.map((item, index) => (
-            <div className="w-[50vw] border-2 rounded-2xl px-4 py-3 productDetails p-2 flex  gap-5">
+            <div className="lg:w-[50vw]  w-full border-2 rounded-2xl md:px-4 py-3 productDetails p-2 flex  gap-5">
               {/* Product Image and quantity */}
               <div className="productImage">
                 <Image
-                  // onClick={() => { setImgIndex(index) }}
                   width={1980}
                   height={1080}
                   src={item.image}
@@ -147,9 +115,9 @@ const Cart = () => {
                 </div>
               </div>
 
-              <div className="w-full">
                 {/* Product Name and Remove icon*/}
-                <div className="text-xl font-semibold flex justify-between">
+              <div className="w-full">
+                <div className="lg:text-xl font-semibold flex justify-between">
                   {item.name}
                   <MdClose
                     onClick={() => dispatch(removeFromCart(item.productId))}
@@ -157,7 +125,7 @@ const Cart = () => {
                   />
                 </div>
                 {/* Delivery */}
-                <div className="text-gray-600">
+                <div className="text-gray-600 text-sm md:text-lg">
                   Delivered in <strong className="text-black">4 - 6 days</strong> ,
                   Thu 4 Dec
                 </div>
@@ -177,29 +145,29 @@ const Cart = () => {
 
         {/* priceDetails */}
         {cartItems.length != 0 ? (
-          <div className="priceDetails w-[25vw] h-fit border-slate-300  mx-8 px-4 py-3   border rounded-lg p-5">
+          <div className="priceDetails lg:w-[25vw] w-full  h-fit border-slate-300  lg:mx-8 px-4 py-3   border rounded-lg p-5">
             <div className="text-[18px] font-semibold m-auto w-fit">
               Price Details
             </div>
-            <div className="my-4">
+            <div className="my-4x" >
               <div className="flex justify-between">
                 <div>Total Price [Items: {totalItems}]</div>
-                <div>₹{totalPrice}</div>
+                <div className="font-semibold">₹{totalPrice}</div>
               </div>
 
               <div className="flex justify-between">
                 <div>Discounted Price</div>
-                <div className="text-green-600">₹{totalDiscountedPrice}</div>
+                <div className="text-green-600 font-semibold">₹{totalDiscountedPrice}</div>
               </div>
 
               <div className="flex justify-between">
                 <div>TDS</div>
-                <div>₹0</div>
+                <div className="font-semibold">₹0</div>
               </div>
 
               <div className="flex justify-between">
                 <div>Delivery Charges</div>
-                <div>₹40</div>
+                <div className="font-semibold">₹40</div>
               </div>
 
               <hr className="my-4" />

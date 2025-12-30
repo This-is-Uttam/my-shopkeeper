@@ -22,8 +22,8 @@ const addressSchema = new Schema<IAddress>(
     fullName: { type: String, required: true },
     phone: { type: String, required: true },
 
-    addressLine1: { type: String },
-    addressLine2: { type: String, required: true },
+    addressLine1: { type: String , required: true },
+    addressLine2: { type: String},
 
     landmark: { type: String },
 

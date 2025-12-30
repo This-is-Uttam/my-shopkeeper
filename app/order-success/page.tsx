@@ -100,7 +100,7 @@ const [orderDetails, setOrderDetails] = useState<{
         {/* Actions */}
         <div className="mt-6 flex flex-col gap-3">
           <button
-            onClick={() => router.push(`/orders/${orderId}`)}
+            onClick={() => router.push(`/orders`)}
             className="w-full cursor-pointer bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700"
           >
             View Order

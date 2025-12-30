@@ -33,7 +33,6 @@ export default function Page({
   const { productname: slug } = use(params);
   const [product, setProduct] = useState<IProduct>();
   const [imgIndex, setImgIndex] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(false);
   const dispach = useAppDispatch();
   const items = useAppSelector((state) => state.cart.items);
 
@@ -58,20 +57,20 @@ export default function Page({
 
   return (
     <div>
-      <div className="flex my-8">
+      <div className="flex flex-col lg:flex-row my-8">
         {/* Product Image */}
-        <div className="prodImage mx-2 p-4">
-          <div className="w-[400px] h-100 mx-2  overflow-hidden flex gap-6 items-center">
+        <div className="prodImage mx-2 p-4 ">
+          <div className="w-[400px] h-[410px] mx-2  overflow-hidden flex flex-col lg:flex-row gap-6 items-center">
             {/* Image list */}
-            <div className="flex flex-col gap-2">
+            <div className="flex lg:flex-col gap-2 order-2 lg:order-1">
               {product?.images.map((item, index) => {
                 const isActive = index === imgIndex;
 
                 return (
                   <div
-                    className={`rounded-[8px] p-[3px] ${
+                    className={`rounded-lg p-[3px] ${
                       isActive
-                        ? "border-2 border-blue-600"
+                        ? "border-2 border-blue-600 mb-2"
                         : "border-2 border-transparent"
                     }`}
                   >
@@ -85,7 +84,7 @@ export default function Page({
                       src={item}
                       alt=""
                       unoptimized
-                      className="w-14 h-12 rounded-[8px] object-cover"
+                      className="w-14 h-12 rounded-lg object-cover"
                     />
                   </div>
                 );
@@ -98,7 +97,7 @@ export default function Page({
               src={product?.images[imgIndex] || "/placeholder.jpg"}
               alt="Image"
               unoptimized
-              className="w-80 object-cover rounded-xl"
+              className="w-80 h-80 object-cover rounded-xl order-1 lg:order-2"
             />
           </div>
           {/* buy cart buttons */}

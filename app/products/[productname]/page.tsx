@@ -7,7 +7,7 @@ import React, { use } from "react";
 import { useEffect, useState } from "react";
 import { addToCart, CartItem } from "@/features/cart/cartSlice";
 
-export async function saveCartToDb(cartItems: CartItem[]) {
+async function saveCartToDb(cartItems: CartItem[]) {
   const response = await fetch("/api/cart/sync", {
     method: "POST",
     headers: {

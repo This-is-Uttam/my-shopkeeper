@@ -9,7 +9,25 @@ import { useUser } from "@clerk/nextjs";
 import { IProduct } from "@/lib/models/Products";
 import { useAppSelector, useAppDispatch } from "./hook";
 import { CartItem, setCart } from "@/features/cart/cartSlice";
-import { saveCartToDb } from "./products/[productname]/page";
+
+
+async function saveCartToDb(cartItems: CartItem[]) {
+  const response = await fetch("/api/cart/sync", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      items: cartItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        priceAtThatTime: item.discountPrice || item.price,
+      })),
+    }),
+  });
+
+  const resData = await response.json();
+}
 
 export default function Home() {
   const cartItems = useAppSelector((state) => state.cart.items);

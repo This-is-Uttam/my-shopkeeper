@@ -12,8 +12,25 @@ import {
 } from "@/features/cart/cartSlice";
 import Image from "next/image";
 import { MdClose } from "react-icons/md";
-import { saveCartToDb } from "../products/[productname]/page";
 import { useRouter } from "next/navigation";
+
+async function saveCartToDb(cartItems: CartItem[]) {
+  const response = await fetch("/api/cart/sync", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      items: cartItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        priceAtThatTime: item.discountPrice || item.price,
+      })),
+    }),
+  });
+
+  const resData = await response.json();
+}
 
 const Cart = () => {
   const cartItems = useAppSelector((state) => state.cart.items);

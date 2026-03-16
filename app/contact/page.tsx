@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/components/Button";
 import { useState } from "react";
 
 export default function ContactPage() {

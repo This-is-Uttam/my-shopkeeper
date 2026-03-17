@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import {usePathname} from 'next/navigation'
 import {
   Home,
   MenuIcon,
@@ -9,12 +12,20 @@ import {
 } from "lucide-react";
 
 const Sidebar = () => {
-  // const [isSidebarOpen, setisSidebarOpen] = useState(true)
+  // const [isSidebarOpen, setisSidebarOpen] = useState(true).
+  const pathname = usePathname();
+
+  const activeClass = (path: string) =>
+    `flex mx-2 p-2 rounded-md font-semibold ${
+      pathname === path
+        ? "bg-blue-200 text-gray-900"
+        : "text-gray-700 hover:text-gray-900"
+    }`;
 
   return (
     <div className="">
       <nav className="max-w-64 bg-white flex items-center p-4 ">
-        <MenuIcon className="w-4.5  mr-2" />
+        <MenuIcon className="w-4.5  mx-1" />
         <h2 className="text-xl font-semibold hidden lg:inline-block ml-2 w-[180px]">
           Admin Panel
         </h2>
@@ -23,10 +34,10 @@ const Sidebar = () => {
         <li className="">
           <Link
             href="/admin"
-            className="text-gray-700 hover:text-gray-900 flex my-1 mx-2 p-2 px-3 bg-blue-200 rounded-lg font-semibold"
+            className={activeClass("/admin")}
           >
-            <Home className="w-4.5 " />{" "}
-            <span className="hidden lg:inline-block ml-2 w-[180px] ml-2 w-[180px]">
+            <Home className="w-4.5 mx-1" />{" "}
+            <span className="hidden lg:inline-block ml-2 w-[180px]">
               Dashboard
             </span>
           </Link>
@@ -34,9 +45,9 @@ const Sidebar = () => {
         <li className="w-full">
           <Link
             href="/admin/products"
-            className="text-gray-700 hover:text-gray-900 flex mx-2 p-2 rounded-md font-semibold"
+            className={activeClass("/admin/products")}
           >
-            <Package className="w-5 mr-2" />{" "}
+            <Package className="w-5 mx-1" />{" "}
             <span className="hidden lg:inline-block ml-2 w-[180px]">
               Products
             </span>
@@ -45,9 +56,9 @@ const Sidebar = () => {
         <li className="w-full">
           <Link
             href="/admin/orders"
-            className="text-gray-700 hover:text-gray-900 flex mx-2 p-2 rounded-md font-semibold"
+            className={activeClass("/admin/orders")}
           >
-            <ShoppingBagIcon className="w-4.5 mr-2" />{" "}
+            <ShoppingBagIcon className="w-4.5 mx-1" />{" "}
             <span className="hidden lg:inline-block ml-2 w-[180px]">
               Orders
             </span>
@@ -57,9 +68,9 @@ const Sidebar = () => {
         <li className="w-full">
           <Link
             href="/admin/users"
-            className="text-gray-700 hover:text-gray-900 flex mx-2 p-2 rounded-md font-semibold"
+            className={activeClass("/admin/users")}
           >
-            <User2 className="w-4.5 mr-2" />{" "}
+            <User2 className="w-4.5 mx-1" />{" "}
             <span className="hidden lg:inline-block ml-2 w-[180px]">Users</span>
           </Link>
         </li>
@@ -67,9 +78,9 @@ const Sidebar = () => {
         <li className="w-full flex items-center">
           <Link
             href="/admin/settings"
-            className="text-gray-700 hover:text-gray-900 flex  mx-2 p-2 rounded-md font-semibold"
+            className={activeClass("/admin/settings")}
           >
-            <Settings className="w-5 mr-2" />{" "}
+            <Settings className="w-5 mx-1" />{" "}
             <span className="hidden lg:inline-block ml-2 w-[180px]">
               Settings
             </span>

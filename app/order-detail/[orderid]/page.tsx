@@ -1,17 +1,18 @@
 "use client";
 import { statusColorMap } from "@/components/OrderCard";
 import { IOrder } from "@/lib/models/Orders";
+import { formatDate } from "@/utils/helper2";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 
 
 
-const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+// const formatDate = (date: string) =>
+//   new Date(date).toLocaleDateString("en-GB", {
+//     day: "2-digit",
+//     month: "short",
+//     year: "numeric",
+//   });
 
 export default function Page({
   params,
@@ -63,7 +64,7 @@ export default function Page({
                   Order Id: #{order?._id?.toString()}
                 </h1>
                 <p className="text-sm text-gray-500">
-                  Ordered on {formatDate(order.orderedAt.toString())}
+                  Ordered on {formatDate(new Date(order.orderedAt.toString()))}
                 </p>
               </div>
 

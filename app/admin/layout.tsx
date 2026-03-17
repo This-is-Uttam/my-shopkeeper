@@ -24,8 +24,7 @@ export default async function AdminLayout({
 
   // 4 Role check
   if (!user || user.role !== "ADMIN") {
-    redirect("/"); // or /unauthorized
-    // console.log("User: ", user);
+    redirect("/"); 
   }
 
   // 5 Allow access

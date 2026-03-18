@@ -23,7 +23,7 @@ const AddProductPage = () => {
     thumbnail: "",
     category: "",
     subCategory: "",
-    tags: [],
+    tags: [] as string[],
     stock: 0,
     brand: "",
     isFeatured: false,
@@ -50,7 +50,19 @@ const AddProductPage = () => {
     setTempImgsFiles(imageFiles);
   }, []);
 
+  const [inputTag, setInputTag] = useState("");
 
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputTag.trim() !== "") {
+      e.preventDefault();
+      const value = inputTag.trim();
+
+    if (!value || formData.tags?.includes(value)) return;
+      const tagsArray = [...formData.tags!, inputTag.trim()];
+      setFormData((prev) => ({ ...prev, tags: tagsArray }));
+      setInputTag("");
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -121,6 +133,11 @@ const AddProductPage = () => {
 
     setIsLoading(false);
   };
+
+  const removeTag = (tagToRemove: string) => {
+    const updatedTags = formData.tags?.filter((tag) => tag !== tagToRemove);
+    setFormData((prev) => ({ ...prev, tags: updatedTags }));
+  }
 
   return (
     <div>
@@ -280,21 +297,6 @@ const AddProductPage = () => {
                   />
                 </div>
 
-                {/* Tags */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mt-2 mb-1">
-                    Tags
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    name="tags"
-                    placeholder="book, cloth, phone"
-                    value={formData.tags}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
 
                 {/* Brand */}
                 <div>
@@ -310,6 +312,41 @@ const AddProductPage = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mt-2 mb-1">
+                    Tags
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    name="tags"
+                    placeholder="Enter a tag and press Enter"
+                    value={inputTag}
+                    onChange={(e) => setInputTag(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+
+                  {/* Tags UI */}
+                  <div className="flex flex-wrap gap-2 rounded-md p-2">
+                    {formData.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="flex items-center gap-1 rounded-md bg-gray-200 px-2 py-1 text-sm"
+                      >
+                        {tag}
+                        <button
+                          onClick={() => removeTag(tag)}
+                          className="text-red-500"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    ))}
+                 </div>
                 </div>
 
                 {/* Featured Product */}

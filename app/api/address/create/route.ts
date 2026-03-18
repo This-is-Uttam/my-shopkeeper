@@ -82,17 +82,6 @@ export async function DELETE(request: Request) {
     const data = await request.json();
     const _id = data._id;
 
-    // const {
-    //   fullName,
-    //   phone,
-    //   addressLine1,
-    //   addressLine2,
-    //   landmark,
-    //   city,
-    //   state,
-    //   pincode,
-    // } = data;
-
     // connect to db
     await connectDB();
 

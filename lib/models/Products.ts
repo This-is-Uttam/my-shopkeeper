@@ -1,5 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+type ImageType = {
+  url: string;
+  public_id: string;
+};
+
 export interface IProduct extends Document {
   name: string;
   slug: string;
@@ -11,7 +16,7 @@ export interface IProduct extends Document {
   discountPrice?: number;
   currency: string;
 
-  images: string[];
+  images: ImageType[];
   thumbnail: string;
 
   category: string;
@@ -44,7 +49,15 @@ const ProductSchema = new Schema<IProduct>(
     discountPrice: { type: Number },
     currency: { type: String, default: "INR" },
 
-    images: { type: [String], required: true },
+    images: {
+      type: [
+        {
+          url: String,
+          public_id: String,
+        },
+      ],
+      required: true,
+    },
     thumbnail: { type: String, required: true },
 
     category: { type: String, required: true },
@@ -64,9 +77,8 @@ const ProductSchema = new Schema<IProduct>(
 
     createdBy: { type: String, required: true }, // admin userId
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Product =
-  mongoose.models.Product ||
-  mongoose.model<IProduct>("Product", ProductSchema);
+  mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);

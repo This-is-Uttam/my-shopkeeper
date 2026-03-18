@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import ImageDropzone from "@/components/ImageDropzone";
 import slugify from "slugify";
 import { CgAdd } from "react-icons/cg";
@@ -9,6 +8,7 @@ import { IProduct } from "@/lib/models/Products";
 import { Switch } from "@/components/ui/switch";
 import { ToastContainer, toast } from "react-toastify";
 import { nanoid } from "nanoid";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const AddProductPage = () => {
   const [formData, setFormData] = useState<Partial<IProduct>>({
@@ -30,6 +30,8 @@ const AddProductPage = () => {
     createdBy: "",
   });
 
+  
+
   const [tempImgsFiles, setTempImgsFiles] = useState<File[]>([]);
 
   const notify = (e: string) => toast(e);
@@ -46,8 +48,9 @@ const AddProductPage = () => {
 
   const handleImagesChange = useCallback((imageFiles: File[]) => {
     setTempImgsFiles(imageFiles);
-
   }, []);
+
+
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -55,19 +58,6 @@ const AddProductPage = () => {
     >,
   ) => {
     const { name, value } = e.target;
-    // if input is tags
-    if (name === "tags") {
-      const tagsArray = value
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
-
-      setFormData((prev) => ({
-        ...prev,
-        tags: tagsArray,
-      }));
-      return;
-    }
 
     setFormData((prev) => ({
       ...prev,
@@ -75,11 +65,7 @@ const AddProductPage = () => {
     }));
   };
 
-
-
   const uploadToCloudinary = async (file: File) => {
-    console.log("upLoading started....", file.name);
-
     const formDataCloudinary = new FormData();
     formDataCloudinary.append("file", file);
     formDataCloudinary.append("upload_preset", "product_uploads");
@@ -98,29 +84,30 @@ const AddProductPage = () => {
 
     const data = await res.json();
 
-    return data.secure_url as string;
+    return {
+      url: data.secure_url as string,
+      public_id: data.public_id as string,
+    };
   };
 
   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     // Upload images to Cloudinary
     if (isLoading) return;
     setIsLoading(true);
 
-    const uploadedImageUrls: string[] = await Promise.all(
+    const uploadedImages = await Promise.all(
       tempImgsFiles.map((imgFile) => uploadToCloudinary(imgFile)),
     );
 
     const updatedFormData = {
       ...formData,
-      
-      images: uploadedImageUrls,
-      thumbnail: uploadedImageUrls[0],
+
+      images: uploadedImages,
+      thumbnail: uploadedImages[0].url,
       slug: createSlug(formData.name || ""),
     };
-
-    console.log("Updated FormData:", updatedFormData);
 
     // Send form data to the API route
     const response = await fetch("/api/product/add-product", {
@@ -352,6 +339,13 @@ const AddProductPage = () => {
           </div>
         </form>
       </div>
+
+      <Dialog open={isLoading}>
+        <DialogContent className="flex items-center justify-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-black" />
+          <p>Submitting product...</p>
+        </DialogContent>
+      </Dialog>
       <ToastContainer />
     </div>
   );

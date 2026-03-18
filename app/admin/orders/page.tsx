@@ -51,9 +51,9 @@ const AdminOrderPage = () => {
                     <TableRow className="bg-gray-100">
                       <TableHead className="text-left text-gray-700 font-bold">Order ID</TableHead>
                       <TableHead className="text-left text-gray-700 font-bold">User Id</TableHead>
-                      <TableHead className="text-left text-gray-700 font-bold">Order Date</TableHead>
                       <TableHead className="text-left text-gray-700 font-bold">Order Amount</TableHead>
-                      <TableHead className="text-left text-gray-700 font-bold">Order Status</TableHead>
+                      <TableHead className="text-left text-gray-700 font-bold">Order Date</TableHead>
+                      <TableHead className="text-center text-gray-700 font-bold">Order Status</TableHead>
                       <TableHead className="text-left text-gray-700 font-bold">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -63,10 +63,11 @@ const AdminOrderPage = () => {
                         <TableRow key={index}>
                           <TableCell className="text-left font-bold">{order._id.toString()}</TableCell>
                           <TableCell className="text-left">{order.userId}</TableCell>
+                          <TableCell className="text-left">{order.totalAmount?.toLocaleString("en-IN", { style: "currency", currency: "INR" })}</TableCell>
                           <TableCell className="text-left">{formatDate(new Date(order.orderedAt.toString()))}</TableCell>
-                          <TableCell className="text-left">₹{order.totalAmount?.toFixed(2)}</TableCell>
-                          <TableCell className={`"text-left"`}>
-                            <span className={`px-2 py-1 text-xs ${order.orderStatus === "DELIVERED" ? "bg-green-200 text-green-400 font-semibold" : " bg-yellow-200 font-semibold text-yellow-600 rounded"}`}>
+                          
+                          <TableCell className={`flex justify-center`}>
+                            <span className={`px-2 py-1 text-xs ${orders[1]?.orderStatus === "DELIVERED" ? "bg-green-200 border border-green-400 text-green-400 font-semibold" : " bg-yellow-200 border border-yellow-400 font-semibold text-yellow-600 rounded"}`}>
                             {order.orderStatus}
                             </span>
                             </TableCell>

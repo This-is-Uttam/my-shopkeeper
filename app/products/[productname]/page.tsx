@@ -7,6 +7,7 @@ import React, { use } from "react";
 import { useEffect, useState } from "react";
 import { addToCart, CartItem } from "@/features/cart/cartSlice";
 
+
 async function saveCartToDb(cartItems: CartItem[]) {
   const response = await fetch("/api/cart/sync", {
     method: "POST",
@@ -81,10 +82,10 @@ export default function Page({
                       }}
                       width={1980}
                       height={1080}
-                      src={item}
+                      src={item.url || "/placeholder.jpg"}
                       alt=""
                       unoptimized
-                      className="w-14 h-12 rounded-lg object-cover"
+                      className="w-14 h-12 rounded-lg object-contain cursor-pointer"
                     />
                   </div>
                 );
@@ -94,10 +95,10 @@ export default function Page({
             <Image
               width={1980}
               height={1080}
-              src={product?.images[imgIndex] || "/placeholder.jpg"}
+              src={product?.images[imgIndex].url || "/placeholder.jpg"}
               alt="Image"
               unoptimized
-              className="w-80 h-80 object-cover rounded-xl order-1 lg:order-2"
+              className="w-80 h-80 object-contain rounded-xl order-1 lg:order-2"
             />
           </div>
           {/* buy cart buttons */}

@@ -1,9 +1,9 @@
 "use client";
 
-import { Spinner } from '@/components/ui/spinner';
-import { IUser } from '@/lib/models/User';
-import React from 'react'
-import { useState, useEffect } from 'react';
+import { Spinner } from "@/components/ui/spinner";
+import { IUser } from "@/lib/models/User";
+import React from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -17,8 +17,6 @@ import {
 const AdminUserPage = () => {
   const [isLoading, setisLoading] = useState(true);
   const [users, setUsers] = useState<IUser[]>([]);
-  
-
 
   const getAllUsers = async () => {
     const response = await fetch("/api/user/get-users-for-admin", {
@@ -31,14 +29,13 @@ const AdminUserPage = () => {
     setisLoading(false);
   };
 
-   useEffect(() => {
-      getAllUsers();
-    }, []);
-  
+  useEffect(() => {
+    getAllUsers();
+  }, []);
 
   return (
     <div>
-         {/* Page Header */}
+      {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Users</h1>
       </div>
@@ -49,15 +46,29 @@ const AdminUserPage = () => {
           <Spinner />
         ) : (
           <Table>
+            <TableHeader>
               <TableRow className="bg-gray-100">
-                <TableHead className="text-left text-gray-700 font-bold">User Image</TableHead>
-                <TableHead className="text-left text-gray-700 font-bold">User Clerk Id</TableHead>
-                <TableHead className="text-left text-gray-700 font-bold">User Full Name</TableHead>
-                <TableHead className="text-left text-gray-700 font-bold">User Email</TableHead>
-                <TableHead className="text-left text-gray-700 font-bold">User Role</TableHead>
-                <TableHead className="text-left text-gray-700 font-bold">Actions</TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  User Image
+                </TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  User Clerk Id
+                </TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  User Full Name
+                </TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  User Email
+                </TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  User Role
+                </TableHead>
+                <TableHead className="text-left text-gray-700 font-bold">
+                  Actions
+                </TableHead>
               </TableRow>
-              <TableBody>
+            </TableHeader>
+            <TableBody>
               {users.length > 0 ? (
                 users.map((user, index) => (
                   <TableRow key={index}>
@@ -70,10 +81,20 @@ const AdminUserPage = () => {
                         />
                       }
                     </TableCell>
-                    <TableCell className="text-left font-semibold">{user._id.toString() ?? "NULL"}</TableCell>
-                    <TableCell className="text-left">{user.fullName ?? "NULL"}</TableCell>
-                    <TableCell className="text-left">{user.email ?? "NULL"}</TableCell>
-                    <TableCell className={`text-left ${user.role === "ADMIN" ? "font-bold" : ""}`}>{user.role ?? "NULL"}</TableCell>
+                    <TableCell className="text-left font-semibold">
+                      {user._id.toString() ?? "NULL"}
+                    </TableCell>
+                    <TableCell className="text-left">
+                      {user.fullName ?? "NULL"}
+                    </TableCell>
+                    <TableCell className="text-left">
+                      {user.email ?? "NULL"}
+                    </TableCell>
+                    <TableCell
+                      className={`text-left ${user.role === "ADMIN" ? "font-bold" : ""}`}
+                    >
+                      {user.role ?? "NULL"}
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -88,7 +109,7 @@ const AdminUserPage = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminUserPage
+export default AdminUserPage;

@@ -10,7 +10,6 @@ import { IProduct } from "@/lib/models/Products";
 import { useAppSelector, useAppDispatch } from "./hook";
 import { CartItem, setCart } from "@/features/cart/cartSlice";
 
-
 async function saveCartToDb(cartItems: CartItem[]) {
   const response = await fetch("/api/cart/sync", {
     method: "POST",
@@ -33,13 +32,13 @@ export default function Home() {
   const cartItems = useAppSelector((state) => state.cart.items);
   const notify = (e: string) => toast(e);
   const userData = useUser();
-  const [products, setProducts] = useState<IProduct[]>([])
-  const [isLoading, setisLoading] = useState(true)
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [isLoading, setisLoading] = useState(true);
 
   const dispatch = useAppDispatch();
 
   // getting cart details
-    const getCart = async () => {
+  const getCart = async () => {
     const response = await fetch("/api/cart/sync", {
       method: "GET",
       headers: {
@@ -59,13 +58,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if(cartItems===undefined) return;
+    if (cartItems === undefined) return;
     if (cartItems.length === 0) return;
     saveCartToDb(cartItems);
   }, [cartItems]);
 
-
-  // getting all products 
+  // getting all products
 
   const getAllProducts = async () => {
     const response = await fetch("/api/product/get-all", {
@@ -74,9 +72,8 @@ export default function Home() {
     });
 
     const resJson = await response.json();
-    setProducts(resJson.products || [])
-    setisLoading(false)
-
+    setProducts(resJson.products || []);
+    setisLoading(false);
   };
 
   useEffect(() => {
@@ -84,11 +81,12 @@ export default function Home() {
   }, []);
 
   if (isLoading) {
-    return (<LoadingSkeleton />)
+    return <LoadingSkeleton />;
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+      {/* Front Banner */}
       <Image
         width={1980}
         height={1080}
@@ -97,22 +95,31 @@ export default function Home() {
         alt=""
         className="lg:w-full w-auto object-cover lg:object-fill  h-50"
       />
-      <div className="text-xl font-bold mx-5 mt-4">Our Featured Products</div>
 
-      <div className="grid md:grid-cols-4 grid-cols-2 lg:grid-cols-6 lg:gap-5 lg:p-2 py-4">
-
-        {products.map((item, i) => ( 
-          <ProductCard
-            key={i}
-            title={item.name}
-            price={item.price}
-            img={item.thumbnail}
-            slug={item.slug}
-          />
-        ))}
+      <div>
+        {products.length > 0 ? (
+          <div>
+            <div className="text-xl font-bold mx-5 mt-4">
+              Our Featured Products
+            </div>
+            <div className="grid md:grid-cols-4 grid-cols-2 lg:grid-cols-6 lg:gap-5 lg:p-2 py-4">
+              {products.map((item, i) => (
+                <ProductCard
+                  key={i}
+                  title={item.name}
+                  price={item.price}
+                  img={item.thumbnail}
+                  slug={item.slug}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="col-span-full text-center text-gray-500 flex items-center justify-center h-40">
+            No products found.
+          </div>
+        )}
       </div>
-
-
-    </>
+    </div>
   );
 }

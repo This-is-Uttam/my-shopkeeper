@@ -1,16 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import ImageDropzone from "@/components/ImageDropzone";
+import Image from "next/image";
 import slugify from "slugify";
 import { CgAdd } from "react-icons/cg";
 import { IProduct } from "@/lib/models/Products";
 import { Switch } from "@/components/ui/switch";
 import { ToastContainer, toast } from "react-toastify";
 import { nanoid } from "nanoid";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-const AddProductPage = () => {
+const ProductDetailPage = ({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}) => {
+  const { productId } = use(params);
+
   const [formData, setFormData] = useState<Partial<IProduct>>({
     name: "",
     slug: "",
@@ -30,6 +37,32 @@ const AddProductPage = () => {
     createdBy: "",
   });
 
+  const getProductDetails = async (productId: string) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/product/get-product-by-id", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId }),
+      });
+
+      const resData = await response.json();
+
+      if (resData.success) {
+        setFormData(resData.product);
+      } else {
+        console.error(resData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const [tempImgsFiles, setTempImgsFiles] = useState<File[]>([]);
 
   const notify = (e: string) => toast(e);
@@ -44,7 +77,7 @@ const AddProductPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [inputTag, setInputTag] = useState("");
-  
+
   const handleImagesChange = useCallback((imageFiles: File[]) => {
     setTempImgsFiles(imageFiles);
   }, []);
@@ -135,6 +168,12 @@ const AddProductPage = () => {
     const updatedTags = formData.tags?.filter((tag) => tag !== tagToRemove);
     setFormData((prev) => ({ ...prev, tags: updatedTags }));
   };
+
+  useEffect(() => {
+    if (!productId) return;
+
+    getProductDetails(productId);
+  }, [productId]);
 
   return (
     <div>
@@ -367,6 +406,44 @@ const AddProductPage = () => {
               </label>
 
               <ImageDropzone onImagesChange={handleImagesChange} />
+
+              {/* Images previously stored */}
+              
+
+              {/* /////////// */}
+              {formData.images && formData.images.length > 0 && (
+        <div className="grid grid-cols-3 gap-4 mt-6">
+          {formData.images.map((img, index) => (
+            <div
+              key={index}
+              className="relative group rounded-lg overflow-hidden border"
+            >
+              <img
+                src={img.url || "/placeholder.png"}
+                alt="preview"
+                className="object-contain w-full h-28"
+              />
+
+              {/* Remove Button */}
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData((prev) => {
+                    const updatedImages = prev.images?.filter(
+                      (_, i) => i !== index,
+                    );
+                    return { ...prev, images: updatedImages };
+                  })
+                }
+                className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded opacity-0
+                group-hover:opacity-100 transition"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
             </div>
           </div>
         </form>
@@ -374,6 +451,7 @@ const AddProductPage = () => {
 
       <Dialog open={isLoading}>
         <DialogContent className="flex items-center justify-center gap-3">
+          <DialogTitle />
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-black" />
           <p>Submitting product...</p>
         </DialogContent>
@@ -383,4 +461,4 @@ const AddProductPage = () => {
   );
 };
 
-export default AddProductPage;
+export default ProductDetailPage;

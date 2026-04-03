@@ -26,9 +26,7 @@ async function saveCartToDb(cartItems: CartItem[]) {
   const resData = await response.json();
 }
 
-export default function Page({
-  params,
-}: {
+export default function Page({params}: {
   params: Promise<{ productname: string }>;
 }) {
   const { productname: slug } = use(params);

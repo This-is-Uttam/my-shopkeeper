@@ -1,9 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IProduct } from "./Products";
 
-/* =======================
-   Cart Interfaces
-======================= */
 
 // DB cart item (stored in MongoDB)
 export interface ICartItem {
@@ -19,9 +16,6 @@ export interface IPopulatedCartItem {
   priceAtThatTime: number;
 };
 
-/* =======================
-   User Interfaces
-======================= */
 
 export interface IUser extends Document {
   fullName: string;
@@ -38,9 +32,6 @@ export interface IUserWithPopulatedCart extends Omit<IUser, "cart"> {
   cart: IPopulatedCartItem[];
 }
 
-/* =======================
-   User Schema
-======================= */
 
 const userSchema = new Schema<IUser>(
   {
@@ -74,9 +65,6 @@ const userSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-/* =======================
-   Model Export
-======================= */
 
 export const User =
   mongoose.models.User || mongoose.model<IUser>("User", userSchema);

@@ -3,15 +3,17 @@ import { IProduct, Product } from "@/lib/models/Products";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
+import { checkIfUserIsAdmin } from "@/utils/helper";
 
 export async function DELETE(request: Request) {
     try {
-    // check if user is logged in
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+      // check if user is logged in and it is admin
+     const isUserAdmin = await checkIfUserIsAdmin();
+ 
+     if (!isUserAdmin) {
+       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+     }
+ 
 
     // get the request
     const products = await request.json();

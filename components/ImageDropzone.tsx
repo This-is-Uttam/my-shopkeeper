@@ -88,7 +88,7 @@ export default function ImageDropzone({ onImagesChange }: ImageDropzoneProps) {
               <img
                 src={img.preview}
                 alt="preview"
-                className="object-cover w-full h-28"
+                className="object-contain w-full h-28"
               />
 
               {/* Remove Button */}

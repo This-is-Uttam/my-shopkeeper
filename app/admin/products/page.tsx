@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ToastContainer, toast } from "react-toastify";
+import { ArrowRightIcon } from "lucide-react";
 
 const AdminProductPage = () => {
   const router = useRouter();
@@ -212,6 +213,9 @@ const AdminProductPage = () => {
                           style: "currency",
                           currency: "INR",
                         })}
+                      </TableCell>
+                      <TableCell className="text-left" onClick={() => router.push(`/admin/products/${product._id.toString()}`)}>
+                        <ArrowRightIcon/>
                       </TableCell>
                     </TableRow>
                   ))}

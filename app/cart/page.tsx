@@ -14,23 +14,7 @@ import Image from "next/image";
 import { MdClose } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
-async function saveCartToDb(cartItems: CartItem[]) {
-  const response = await fetch("/api/cart/sync", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      items: cartItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        priceAtThatTime: item.discountPrice || item.price,
-      })),
-    }),
-  });
 
-  const resData = await response.json();
-}
 
 const Cart = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
@@ -55,31 +39,36 @@ const Cart = () => {
   const payableAmount = totalDiscountedPrice + deliveryCharges;
 
   // getting cart details
-     const getCart = async () => {
-     const response = await fetch("/api/cart/sync", {
-       method: "GET",
-       headers: {
-         "Content-Type": "application/json",
-       },
-     });
- 
-     const resData = await response.json();
-     const { cart } = resData;
-     console.log("resData cart updated: ", JSON.stringify(resData));
-     const cartItems: CartItem[] = cart;
- 
-     dispatch(setCart(cartItems));
-   };
- 
-   useEffect(() => {
-     getCart();
-   }, []);
- 
-   useEffect(() => {
-     if (cartItems.length === 0) return;
-     saveCartToDb(cartItems);
-   }, [cartItems]);
- 
+  const syncCart = async (cartItems: CartItem[]) => {
+
+    const response = await fetch("/api/cart/sync", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          priceAtThatTime: item.discountPrice || item.price,
+        })),
+      }),
+    });
+
+    const resData = await response.json();
+    const { cart } = resData;
+    // const cart: CartItem[] = cart;
+
+    dispatch(setCart(cart));
+  };
+
+  
+
+  useEffect(() => {
+    if (cartItems.length === 0) return;
+    syncCart(cartItems);
+  }, [cartItems]);
+
 
   return (
     <div className="w-fit m-auto mb-4 p-4">
@@ -87,7 +76,7 @@ const Cart = () => {
       <div className="w-[85vw] md:px-12 md:my-1 md:mb-8 mb-3 flex justify-between  items-baseline">
         <h2 className="text-[24px] font-bold text-gray-900">My Cart</h2>
 
-        
+
       </div>
 
       {/* main */}
@@ -121,7 +110,7 @@ const Cart = () => {
                   Qty: <b>{item.quantity}</b>
                   <button
                     onClick={async () => {
-                      
+
                       dispatch(increaseQuantity(item.productId));
                       console.log("cartitem incart: ", cartItems);
                     }}
@@ -132,7 +121,7 @@ const Cart = () => {
                 </div>
               </div>
 
-                {/* Product Name and Remove icon*/}
+              {/* Product Name and Remove icon*/}
               <div className="w-full">
                 <div className="lg:text-xl font-semibold flex justify-between">
                   {item.name}

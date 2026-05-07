@@ -5,8 +5,10 @@ import { IProduct } from "@/lib/models/Products";
 import Image from "next/image";
 import React, { use } from "react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { addToCart, CartItem } from "@/features/cart/cartSlice";
 
+const router = useRouter();
 
 async function saveCartToDb(cartItems: CartItem[]) {
   const response = await fetch("/api/cart/sync", {
@@ -101,9 +103,9 @@ export default function Page({params}: {
           </div>
           {/* buy cart buttons */}
           <div className="flex gap-3 my-2 mt-5">
-            <div className="buy bg-green-400 w-full py-3 rounded-3xl font-bold text-center cursor-pointer hover:bg-green-500 ">
+            {/* <div onClick={()=> router.push("/checkout")} className="buy bg-green-400 w-full py-3 rounded-3xl font-bold text-center cursor-pointer hover:bg-green-500 ">
               Buy Now
-            </div>
+            </div> */}
             <div
               onClick={async () => {
                 dispach(

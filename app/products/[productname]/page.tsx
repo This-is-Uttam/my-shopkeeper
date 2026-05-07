@@ -5,10 +5,8 @@ import { IProduct } from "@/lib/models/Products";
 import Image from "next/image";
 import React, { use } from "react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { addToCart, CartItem } from "@/features/cart/cartSlice";
 
-const router = useRouter();
 
 async function saveCartToDb(cartItems: CartItem[]) {
   const response = await fetch("/api/cart/sync", {

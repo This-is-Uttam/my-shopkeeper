@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hook";
-
+import { useUser } from "@clerk/nextjs";
 import {
   increaseQuantity,
   decreaseQuantity,
@@ -21,22 +21,15 @@ const Cart = () => {
   const deliveryCharges = 40;
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const currentUser = useUser()
+  const [totalItems, setTotalItems] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalDiscountedPrice, setTotalDiscountedPrice] = useState(0)
+  const [payableAmount, setPayableAmount] = useState(0)
 
-  // console.log("cart Items: ", cartItems);
 
-  const totalItems = cartItems.reduce((acc, curr) => {
-    return acc + curr.quantity;
-  }, 0);
 
-  const totalPrice = cartItems.reduce((acc, curr) => {
-    return acc + curr.price * curr.quantity;
-  }, 0);
 
-  const totalDiscountedPrice = cartItems.reduce((acc, curr) => {
-    return acc + curr.discountPrice * curr.quantity;
-  }, 0);
-
-  const payableAmount = totalDiscountedPrice + deliveryCharges;
 
   // getting cart details
   const syncCart = async (cartItems: CartItem[]) => {
@@ -62,16 +55,32 @@ const Cart = () => {
     dispatch(setCart(cart));
   };
 
-  
+
 
   useEffect(() => {
-    if (cartItems.length === 0) return;
-    syncCart(cartItems);
+    if (cartItems && currentUser.isSignedIn) {
+      setTotalItems(cartItems.reduce((acc, curr) => {
+        return acc + curr.quantity;
+      }, 0))
+
+      setTotalPrice(cartItems.reduce((acc, curr) => {
+        return acc + curr.price * curr.quantity;
+      }, 0));
+
+      setTotalDiscountedPrice(cartItems.reduce((acc, curr) => {
+        return acc + curr.discountPrice * curr.quantity;
+      }, 0));
+
+      setPayableAmount(totalDiscountedPrice + deliveryCharges);
+      
+      syncCart(cartItems);
+    }
+
   }, [cartItems]);
 
 
   return (
-    <div className="w-fit m-auto mb-4 p-4">
+    <div className="w-fit  h-screen m-auto mb-4 p-4">
       {/* Header */}
       <div className="w-[85vw] md:px-12 md:my-1 md:mb-8 mb-3 flex justify-between  items-baseline">
         <h2 className="text-[24px] font-bold text-gray-900">My Cart</h2>
@@ -83,7 +92,7 @@ const Cart = () => {
       <div className=" flex justify-center lg:flex-row flex-col gap-8">
         {/* productDetails */}
         <div className=" flex flex-col gap-3">
-          {cartItems.map((item, index) => (
+          {cartItems && cartItems.map((item, index) => (
             <div className="lg:w-[50vw]  w-full border-2 rounded-2xl md:px-4 py-3 productDetails p-2 flex  gap-5">
               {/* Product Image and quantity */}
               <div className="productImage">
@@ -112,7 +121,6 @@ const Cart = () => {
                     onClick={async () => {
 
                       dispatch(increaseQuantity(item.productId));
-                      console.log("cartitem incart: ", cartItems);
                     }}
                     className="bg-blue-500 w-6.5 pb-0.5 cursor-pointer font-bold text-white text-center rounded-2xl"
                   >
@@ -150,7 +158,7 @@ const Cart = () => {
         </div>
 
         {/* priceDetails */}
-        {cartItems.length != 0 ? (
+        {cartItems && cartItems.length != 0 ? (
           <div className="priceDetails lg:w-[25vw] w-full  h-fit border-slate-300  lg:mx-8 px-4 py-3   border rounded-lg p-5">
             <div className="text-[18px] font-semibold m-auto w-fit">
               Price Details
@@ -191,18 +199,20 @@ const Cart = () => {
             </div>
           </div>
         ) : (
-          <div className="w-fit m-auto mb-10">
-            <Image
+          <div className="w-fit mt-10 flex flex-col items-center justify-center m-auto ">
+            {currentUser.isSignedIn ? <Image
               // onClick={() => { setImgIndex(index) }}
-              width={1980}
-              height={1080}
+              width={500}
+              height={500}
               src={"/empty_cart.svg"}
               alt=""
               unoptimized
-              className="w-80 rounded-[8px] py-2"
-            />
-            <div className="text-2xl text-slate-600 font-bold text-center">
-              cart is empty
+              className="w-40 rounded-[8px] py-2"
+            /> :
+              <div className="w-20 h-20 bg-red-300 rounded-full flex justify-center items-center font-bold text-2xl mb-4">!</div>
+            }
+            <div className="text-xl text-gray-500 font-semibold text-center">
+              {currentUser.isSignedIn ? "No items found in the cart!" : "Please Sign In to use cart."}
             </div>
           </div>
         )}

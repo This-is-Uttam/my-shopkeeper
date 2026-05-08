@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
 import { IProduct } from "@/lib/models/Products";
 import { useAppSelector, useAppDispatch } from "./hook";
@@ -30,7 +29,6 @@ async function saveCartToDb(cartItems: CartItem[]) {
 
 export default function Home() {
   const cartItems = useAppSelector((state) => state.cart.items);
-  const notify = (e: string) => toast(e);
   const userData = useUser();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setisLoading] = useState(true);

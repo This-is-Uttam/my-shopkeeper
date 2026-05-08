@@ -6,27 +6,11 @@ import Image from "next/image";
 import React, { use } from "react";
 import { useEffect, useState } from "react";
 import { addToCart, CartItem } from "@/features/cart/cartSlice";
+import { useUser } from "@clerk/nextjs";
+import { ToastContainer, toast } from "react-toastify";
 
 
-async function saveCartToDb(cartItems: CartItem[]) {
-  const response = await fetch("/api/cart/sync", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      items: cartItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        priceAtThatTime: item.discountPrice || item.price,
-      })),
-    }),
-  });
-
-  const resData = await response.json();
-}
-
-export default function Page({params}: {
+export default function Page({ params }: {
   params: Promise<{ productname: string }>;
 }) {
   const { productname: slug } = use(params);
@@ -34,6 +18,11 @@ export default function Page({params}: {
   const [imgIndex, setImgIndex] = useState(0);
   const dispach = useAppDispatch();
   const items = useAppSelector((state) => state.cart.items);
+  const user = useUser()
+  const notify = (msg: string) => {
+    toast(msg)
+  }
+
 
   const getProductDetail = async (slug: string) => {
     const response = await fetch("/api/product/get-product-by-slug", {
@@ -48,11 +37,47 @@ export default function Page({params}: {
     // console.log("Productt details", resData);
   };
 
+  // saveToCart
+  const saveCartToDb = async (cartItems: CartItem[]) => {
+
+    const response = await fetch("/api/cart/sync", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          priceAtThatTime: item.discountPrice || item.price,
+        })),
+      }),
+    });
+
+    const resData = await response.json();
+  }
+
+
   useEffect(() => {
-    if (!slug) return; // safety guard
+    if (!slug) return;
 
     getProductDetail(slug);
   }, [slug]);
+
+
+
+  useEffect(() => {
+    if (!user.isSignedIn) {
+      console.log("User not signed in!")
+      return
+    }
+    if (!user.isLoaded) {
+      console.log("User not loaded!")
+      return
+    }
+    console.log("User : ", user.user)
+
+  }, [user])
 
   return (
     <div>
@@ -67,11 +92,10 @@ export default function Page({params}: {
 
                 return (
                   <div
-                    className={`rounded-lg p-[3px] ${
-                      isActive
-                        ? "border-2 border-blue-600 mb-2"
-                        : "border-2 border-transparent"
-                    }`}
+                    className={`rounded-lg p-[3px] ${isActive
+                      ? "border-2 border-blue-600 mb-2"
+                      : "border-2 border-transparent"
+                      }`}
                   >
                     <Image
                       key={index}
@@ -106,6 +130,13 @@ export default function Page({params}: {
             </div> */}
             <div
               onClick={async () => {
+                // check if user signed in
+                if (!user.isSignedIn) {
+                  notify("Please Sign In to Add To Cart!")
+                  return
+                }
+
+                // Add to redux cart
                 dispach(
                   addToCart({
                     productId: `${product?._id}`,
@@ -169,6 +200,7 @@ export default function Page({params}: {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

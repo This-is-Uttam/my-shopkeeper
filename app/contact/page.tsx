@@ -34,7 +34,7 @@ export default function ContactPage() {
       </p>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="flex justify-center items-center">
         
         {/* Contact Info */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-400 p-8 rounded-xl text-white shadow-lg">

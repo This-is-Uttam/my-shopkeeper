@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Boxes, ShoppingCart } from "lucide-react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { BsHeart } from "react-icons/bs";
 import { CgMore } from "react-icons/cg";
@@ -16,9 +16,12 @@ const Navbar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const items = useAppSelector((state) => state.cart.items);
+  const currentUser = useUser()
   let totalCartItems: number = 0;
 
-  if (items) {
+  console.log("is user signedin: ",currentUser.isSignedIn," loaded: ", currentUser.isLoaded )
+
+  if (currentUser.isLoaded && currentUser.isSignedIn) {
     totalCartItems = items.reduce((acc, curr) => {
       return acc + curr.quantity;
     }, 0);

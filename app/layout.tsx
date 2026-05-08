@@ -21,7 +21,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <head>
-          <script src="https://cdn.lordicon.com/lordicon.js"></script>
+          {/* <script src="https://cdn.lordicon.com/lordicon.js"></script> */}
         </head>
         <ReduxProvider>
         <body
